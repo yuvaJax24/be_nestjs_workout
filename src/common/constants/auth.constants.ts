@@ -1,0 +1,6 @@
+export const AUTH_CONSTANTS = {
+  ACCESS_TOKEN_TTL: '15m',
+  REFRESH_TOKEN_TTL: '30d',
+  MFA_OTP_TTL_SECONDS: 300,
+  MFA_MAX_ATTEMPTS: 5,
+} as const;
