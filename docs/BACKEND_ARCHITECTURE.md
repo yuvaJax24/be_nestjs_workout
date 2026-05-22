@@ -75,3 +75,11 @@ src/
 - `AuthRepository` handles user/MFA challenge persistence boundary for auth use-cases.
 - `PaymentRepository` handles payment state persistence boundary for payment use-cases.
 - Services must call repositories (not direct DB client) to keep business logic isolated from storage details.
+
+
+## Environment & Config
+
+- Runtime env management is centralized in `src/config/env.config.ts`.
+- `ConfigModule` loads `.env.local` then `.env` and validates `PORT` at startup.
+- Use `.env.example` as the source template; never commit real secrets.
+- Keep CORS origins in `CORS_ORIGINS` as a comma-separated allowlist.

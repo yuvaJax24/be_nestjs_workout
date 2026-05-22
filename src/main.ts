@@ -1,21 +1,15 @@
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 
-function parseCorsOrigins(rawOrigins: string | undefined): string[] {
-  if (!rawOrigins) return [];
-  return rawOrigins
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-}
-
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
-  const allowedOrigins = parseCorsOrigins(process.env.CORS_ORIGINS);
+  const configService = app.get(ConfigService);
+  const allowedOrigins = configService.get<string[]>('corsOrigins', []);
 
   app.enableCors({
     origin: (origin, callback) => {
@@ -37,7 +31,8 @@ async function bootstrap(): Promise<void> {
     new ValidationPipe({ whitelist: true, transform: true, forbidNonWhitelisted: true }),
   );
 
-  await app.listen(3000);
+  const port = configService.get<number>('port', 3000);
+  await app.listen(port);
 }
 
 void bootstrap();
